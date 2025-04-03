@@ -15,7 +15,7 @@
             - git
             - curl
             - python3
-            - amazon-linux-extras
+            # - amazon-linux-extras
           state: present
 
       - name: Enable Docker in Amazon Linux
