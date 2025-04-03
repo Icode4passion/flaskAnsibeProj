@@ -9,7 +9,7 @@ services:
     depends_on:
       - jenkins
     healthcheck:
-      test: ["CMD" , "curl", "-f" , "http:localhost:5000" ]
+      test: ["CMD" , "curl", "-f" , "http://localhost:5000" ]
       interval: 10s
       retries: 5
       start_period: 10s
@@ -26,13 +26,15 @@ services:
       - flask
   
   jenkins:
-    image: jenkins/jenkins:lst
+    image: jenkins/jenkins:latest
     container_name: jenkins_server
     ports:
       - "8000:8000"
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock  # Allows Jenkins to manage Docker
 
 volumes:
-  jenkins_home
+  jenkins_home:
+    driver: local
