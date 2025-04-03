@@ -43,7 +43,7 @@
       - name: Add 'ec2-user' to Docker group
         user:
           name: ec2-user
-          group: docker
+          groups: docker
           append: yes
       
       - name: Install Docker Compose
