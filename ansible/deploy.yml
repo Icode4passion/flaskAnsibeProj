@@ -35,7 +35,7 @@
         when: ansible_distribution == "Amazon" and ansible_distribution_version.startswith("2023") 
       
       - name: Start and Enable Docker
-        systemd: 
+        service: 
           name: docker
           state: started
           enable: yes
