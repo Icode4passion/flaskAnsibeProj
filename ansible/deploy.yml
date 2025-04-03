@@ -18,17 +18,17 @@
             # - amazon-linux-extras
           state: present
 
-      - name: Enable Docker in Amazon Linux
-        shell: amazon-linux-extras enable docker
-        when: ansible_distribution == "Amazon" and ansible_distribution_version.startswith("2")
+      # - name: Enable Docker in Amazon Linux
+      #   shell: amazon-linux-extras enable docker
+      #   when: ansible_distribution == "Amazon" and ansible_distribution_version.startswith("2")
 
-      - name: Install Docker Amazon Linux 2
-        yum:
-          name: docker
-          state: present
-        when: ansible_distribution == "Amazon" and ansible_distribution_version.startswith("2") 
+      # - name: Install Docker Amazon Linux 2
+      #   yum:
+      #     name: docker
+      #     state: present
+      #   when: ansible_distribution == "Amazon" and ansible_distribution_version.startswith("2") 
 
-      - name: Install Docker Amazon Linux 2
+      - name: Install Docker Amazon Linux 2023
         dnf:
           name: docker
           state: present
