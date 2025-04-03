@@ -19,12 +19,20 @@
           state: present
 
       - name: Enable Docker in Amazon Linux
-        shell amazon-linux-extras enable docker
+        shell: amazon-linux-extras enable docker
+        when: ansible_distribution == "Amazon" and ansible_distribution_version.startswith("2")
 
-      - name: Install Docker
+      - name: Install Docker Amazon Linux 2
         yum:
           name: docker
           state: present
+        when: ansible_distribution == "Amazon" and ansible_distribution_version.startswith("2") 
+
+      - name: Install Docker Amazon Linux 2
+        dnf:
+          name: docker
+          state: present
+        when: ansible_distribution == "Amazon" and ansible_distribution_version.startswith("2023") 
       
       - name: Start and Enable Docker
         systemd: 
@@ -50,7 +58,7 @@
 
       - name: Display Docker Compose Version
         debug:
-          msg: {{ docker_compose_version.stdout }}
+          msg: "Display Docker version {{ docker_compose_version.stdout }}"
 
       - name: Clone the project from repo
         git:
@@ -66,9 +74,10 @@
 
       - name: Deploy all containers using Docker Compose
         shell: |
-        cd /home/ec2-user/flask-app
-        docker-compose up -d
-        args: /bin/bash
+          cd /home/ec2-user/flask-app
+          docker-compose up -d
+        args: 
+          executable: /bin/bash
 
       - name: wait for Jenkins to start
         wait_for:
@@ -81,7 +90,7 @@
 
       - name: Show Jenkins Password
         debug:
-          msg: "{{ jenkins_password.stdout }}"
+          msg: "Jenkins initial password {{ jenkins_password.stdout }}"
 
 
 
