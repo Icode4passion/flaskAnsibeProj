@@ -62,7 +62,7 @@
 
       - name: Clone the project from repo
         git:
-          repor: "https://github.com/Icode4passion/flaskAnsibeProj.git"
+          repo: "https://github.com/Icode4passion/flaskAnsibeProj.git"
           dest: /home/ec2-user/flask-app
 
       - name: Chnage permission of project directory
