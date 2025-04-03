@@ -1,0 +1,90 @@
+
+---
+  - name: "Play book to Install Falask App Via Ansible "
+    hosts: ec2
+    become: yes
+    tasks:
+      - name: Update all packages
+        yum:
+          name: '*'
+          state: latest
+      
+      - name: Install required dependencies
+        yum:
+          name:
+            - git
+            - curl
+            - python3
+            - amazon-linux-extras
+          state: present
+
+      - name: Enable Docker in Amazon Linux
+        shell amazon-linux-extras enable docker
+
+      - name: Install Docker
+        yum:
+          name: docker
+          state: present
+      
+      - name: Start and Enable Docker
+        systemd: 
+          name: docker
+          state: started
+          enable: yes
+
+      - name: Add 'ec2-user' to Docker group
+        user:
+          name: ec2-user
+          group: docker
+          append: yes
+      
+      - name: Install Docker Compose
+        get_url:
+            url: "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64"
+            dest: "/usr/local/bin/docker-compose"
+            mode: "0755"
+
+      - name: Verify Docker Compose Installation
+        shell: docker-compose --version
+        register: docker_compose_version
+
+      - name: Display Docker Compose Version
+        debug:
+          msg: {{ docker_compose_version.stdout }}
+
+      - name: Clone the project from repo
+        git:
+          repor: ""
+          dest: /home/ec2-user/flask-app
+
+      - name: Chnage permission of project directory
+        file: 
+          path: /home/ec2-user/flask-app
+          owner: ec2-user
+          group: ec2-user 
+          mode: "0755"
+
+      - name: Deploy all containers using Docker Compose
+        shell: |
+        cd /home/ec2-user/flask-app
+        docker-compose up -d
+        args: /bin/bash
+
+      - name: wait for Jenkins to start
+        wait_for:
+          port: 8000
+          timeout: 60
+        
+      - name: Print initial Jenkins admin password
+        shell: cat /var/jenkins_home/secrets/initialAdminPassword
+        register: jenkins_password
+
+      - name: Show Jenkins Password
+        debug:
+          msg: "{{ jenkins_password.stdout }}"
+
+
+
+
+
+
