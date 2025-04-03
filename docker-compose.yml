@@ -18,7 +18,7 @@ services:
   nginx:
     image: nginx:latest
     container_name: nginx_proxy
-    volume:
+    volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "80:80"
