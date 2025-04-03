@@ -10,7 +10,7 @@ services:
       - jenkins
     healthcheck:
       test: ["CMD" , "curl", "-f" , "http:localhost:5000" ]
-      intervals: 10s
+      interval: 10s
       retries: 5
       start_preiod: 10s
       timeout: 5s
