@@ -115,7 +115,7 @@
       - name: Get docker-compose logs
         shell: |
           cd /home/ec2-user/flask-app
-          docker-compose logs
+          /usr/local/bin/docker-compose logs
         register: compose_logs
         ignore_errors: yes
 
