@@ -78,8 +78,8 @@
           docker-compose up -d
         args: 
           executable: /bin/bash
-        async: 300         # run for max 5 minutes
-        poll: 10
+        async: 600         # run for max 5 minutes
+        poll: 30
 
       - name: wait for Jenkins to start
         wait_for:
