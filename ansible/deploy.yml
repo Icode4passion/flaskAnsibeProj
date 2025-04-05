@@ -89,14 +89,12 @@
 
       - name: Deploy all containers using Docker Compose
         become: yes
-        become_user: ec2-user                 
-        args: 
-          chdir:  /home/ec2-user/flask-app 
-          executable: /bin/bash
+        become_user: ec2-user
         shell: |
-          /usr/local/bin/docker-compose up  
-        register: compose_run
-        ignore_errors: yes
+          cd /home/ec2-user/flask-app
+          /usr/local/bin/docker-compose up                   
+        executable: /bin/bash
+        
        
       - name: wait for Jenkins to start
         wait_for:
