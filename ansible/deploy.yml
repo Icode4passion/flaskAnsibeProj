@@ -92,8 +92,9 @@
         become_user: ec2-user
         shell: |
           cd /home/ec2-user/flask-app
-          /usr/local/bin/docker-compose up                   
-        executable: /bin/bash
+          /usr/local/bin/docker-compose up 
+        args:
+          executable: /bin/bash
         
        
       - name: wait for Jenkins to start
