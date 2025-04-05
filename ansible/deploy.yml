@@ -40,6 +40,14 @@
           state: started
           enabled: yes
 
+      - name: Wait for Docker daemon to be ready
+        shell: |
+          while (! docker info > /dev/null 2>&1); do sleep 1; done
+        retries: 10
+        delay: 5
+        register: docker_ready
+        until: docker_ready.rc == 0
+
       - name: Add 'ec2-user' to Docker group
         user:
           name: ec2-user
@@ -71,8 +79,17 @@
           owner: ec2-user
           group: ec2-user 
           mode: "0755"
+      - name: Create Jenkins home directory with correct permissions
+        file:
+          path: /home/ec2-user/flask-app/jenkins_home
+          state: directory
+          owner: 1000
+          group: 1000
+          mode: "0755"
 
       - name: Deploy all containers using Docker Compose
+        become: yes
+        become_user: ec2-user
         shell: |
           cd /home/ec2-user/flask-app
           docker-compose up -d
@@ -80,6 +97,26 @@
           executable: /bin/bash
         async: 600         # run for max 5 minutes
         poll: 30
+
+
+      - name: Show running containers
+        shell: docker ps -a
+        register: docker_ps
+        ignore_errors: yes
+
+      - debug:
+          var: docker_ps.stdout_lines
+
+      # ⬇️ Add this right after the docker-compose up task
+      - name: Get docker-compose logs
+        shell: |
+          cd /home/ec2-user/flask-app
+          docker-compose logs
+        register: compose_logs
+        ignore_errors: yes
+
+      - debug:
+          var: compose_logs.stdout_lines
 
       - name: wait for Jenkins to start
         wait_for:
