@@ -89,39 +89,15 @@
 
       - name: Deploy all containers using Docker Compose
         become: yes
-        become_user: ec2-user
-        shell: |
-          cd /home/ec2-user/flask-app
-          /usr/local/bin/docker-compose up                   
+        become_user: ec2-user                 
         args: 
+          chdir:  /home/ec2-user/flask-app 
           executable: /bin/bash
+        shell: |
+          /usr/local/bin/docker-compose up  
         register: compose_run
         ignore_errors: yes
-        # async: 600         # run for max 5 minutes
-        # poll: 30
-      # - name: Show DockerCompose output
-      #   debug:
-      #     var: compose_run.stdout_lines
-
-      # - name: Show running containers
-      #   shell: docker ps -a
-      #   register: docker_ps
-      #   ignore_errors: yes
-
-      # - debug:
-      #     var: docker_ps.stdout_lines
-
-      # # ⬇️ Add this right after the docker-compose up task
-      # - name: Get docker-compose logs
-      #   shell: |
-      #     cd /home/ec2-user/flask-app
-      #     /usr/local/bin/docker-compose logs
-      #   register: compose_logs
-      #   ignore_errors: yes
-
-      # - debug:
-      #     var: compose_logs.stdout_lines
-
+       
       - name: wait for Jenkins to start
         wait_for:
           port: 8000
