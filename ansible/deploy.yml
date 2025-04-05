@@ -65,7 +65,7 @@
           repo: "https://github.com/Icode4passion/flaskAnsibeProj.git"
           dest: /home/ec2-user/flask-app
 
-      - name: Chnage permission of project directory
+      - name: Change permission of project directory
         file: 
           path: /home/ec2-user/flask-app
           owner: ec2-user
@@ -78,6 +78,8 @@
           docker-compose up -d
         args: 
           executable: /bin/bash
+        async: 300         # run for max 5 minutes
+        poll: 10
 
       - name: wait for Jenkins to start
         wait_for:
