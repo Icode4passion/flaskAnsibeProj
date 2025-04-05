@@ -95,9 +95,13 @@
           docker-compose up -d
         args: 
           executable: /bin/bash
-        async: 600         # run for max 5 minutes
-        poll: 30
-
+        register: compose_run
+        ignore_errors: yes
+        # async: 600         # run for max 5 minutes
+        # poll: 30
+      - name: Show DockerCompose output
+        debug:
+          var: compose_run.stdout_lines
 
       - name: Show running containers
         shell: docker ps -a
