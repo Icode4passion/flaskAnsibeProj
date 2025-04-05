@@ -92,7 +92,7 @@
         become_user: ec2-user
         shell: |
           cd /home/ec2-user/flask-app
-          docker-compose up -d
+          docker-compose up                   
         args: 
           executable: /bin/bash
         register: compose_run
