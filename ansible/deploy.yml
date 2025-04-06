@@ -87,12 +87,22 @@
           group: 1000
           mode: "0755"
 
+      - name: Check Docker compose path
+        stat:
+          path: /home/ec2-user/flask-app/docker-compose.yml
+        register: composefile
+      - name: If docker-compose file not found
+        fail:
+          msg: "Compose file missing"
+        when: not composefile.stat.exists
+
+
       - name: Deploy all containers using Docker Compose
         become: yes
         become_user: ec2-user
         shell: |
           cd /home/ec2-user/flask-app
-          /usr/local/bin/docker-compose --verbose up 
+          /usr/local/bin/docker-compose up -d --build
         args:
           executable: /bin/bash
         
