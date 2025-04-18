@@ -110,12 +110,17 @@
        
       - name: wait for Jenkins to start
         wait_for:
-          path: /home/ec2-user/flask-app/jenkins_home/secrets/initialAdminPassword
           port: 8080
+          timeout: 120
+
+      - name: wait for Jenkins to start
+        wait_for:
+          path: /home/ec2-user/flask-app/jenkins_home/secrets/initialAdminPassword
           timeout: 120
         
       - name: Print initial Jenkins admin password
         command: cat /home/ec2-user/flask-app/jenkins_home/secrets/initialAdminPassword
+        register: jenkins_password
 
       - name: Show Jenkins Password
         debug:
